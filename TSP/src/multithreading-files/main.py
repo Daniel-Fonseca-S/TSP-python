@@ -4,11 +4,11 @@ import time
 from libs.AJE import AJE
 from libs.TSPSolver import TSPSolver
 
-fileName = None
-threadsNumber = None
-execTime = None
-populationNumber = None
-mutationProb = None
+fileName = ''
+threadsNumber = 0
+execTime = 0
+populationNumber = 0
+mutationProb = 0
 
 
 def main():
@@ -50,12 +50,12 @@ def request_params():
 
 
 def reset_params():
-    AJE.reset_AJE()
-    TSPSolver.reset_TSPSolver()
+    AJE.reset_aje()
+    TSPSolver.reset_tsp_solver()
 
 
 def show_info_init():
-    print("\n--== General Informations ==--")
+    print("\n--== General Information ==--")
     print("File: " + fileName)
     print("Number of Threads: " + str(threadsNumber))
     print("(MAX) Execution Time: " + str(execTime) + " second(s)")
@@ -66,7 +66,7 @@ def show_info_init():
 def start_program():
     start_time = time.time()
     show_info_init()
-    AJE.read_From_File(fileName)
+    AJE.read_from_file(fileName)
     AJE.start(mutationProb, populationNumber,
               execTime, threadsNumber, start_time)
 

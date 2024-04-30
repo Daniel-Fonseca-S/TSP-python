@@ -1,51 +1,31 @@
-import multiprocessing as mp
+import multiprocessing
 import time
 
 
-class ProcessToRun(mp.Process):
-
-    def __init__(self, timePerProcess, mutProb, populSize, citSize, matrixReceive, manager):
-        mp.Process.__init__(self)
-        self.timePerProcess = timePerProcess
-        self.shared_data = manager.dict({
-            'mutationProb': mutProb,
-            'populationSize': populSize,
-            'citiesNumber': citSize,
-            'matrix': matrixReceive,
-            'bestDistanceFinal': None,
-            'bestPathFinal': None,
-            'iterationsFinal': None,
-            'timeFinal': None
-        })
+class ProcessToRun(multiprocessing.Process):
+    def __init__(self, conn, time_per_process, mut_prob, population_size, cities_size, matrix_receive):
+        multiprocessing.Process.__init__(self)
+        self.conn = conn
+        self.timePerProcess = time_per_process
+        self.mutationProb = mut_prob
+        self.populationSize = population_size
+        self.citiesNumber = cities_size
+        self.matrix = matrix_receive
 
     def run(self):
-        from libs.TSPSolver import TSPSolver
-        startTime = time.time()
-        timeToExec = self.timePerProcess
+        from .TSPSolver import TSPSolver
+        start_time = time.time()
+        time_to_exec = self.timePerProcess
         for _ in range(1, 1_000_000_000 + 1):
             TSPSolver.start(
                 self.timePerProcess,
-                self.shared_data['mutationProb'],
-                self.shared_data['populationSize'],
-                self.shared_data['citiesNumber'],
-                self.shared_data['matrix']
+                self.mutationProb,
+                self.populationSize,
+                self.citiesNumber,
+                self.matrix
             )
-            if (time.time() - startTime) >= timeToExec:
+            if (time.time() - start_time) >= time_to_exec:
                 break
 
-        self.shared_data['bestDistanceFinal'] = TSPSolver.bestDistance
-        self.shared_data['bestPathFinal'] = TSPSolver.bestPath
-        self.shared_data['iterationsFinal'] = TSPSolver.iterations
-        self.shared_data['timeFinal'] = TSPSolver.execTimeFound
-
-    def getBestDistanceFinal(self):
-        return self.shared_data['bestDistanceFinal']
-
-    def getBestPathFinal(self):
-        return self.shared_data['bestPathFinal']
-
-    def getIterationsFinal(self):
-        return self.shared_data['iterationsFinal']
-
-    def getFormattedTimeFinal(self):
-        return self.shared_data['timeFinal']
+        self.conn.send([TSPSolver.best_distance, TSPSolver.best_path, TSPSolver.iterations, TSPSolver.exec_time_found])
+        self.conn.close()

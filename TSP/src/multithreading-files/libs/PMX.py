@@ -3,38 +3,38 @@ import random
 
 class PMX:
     @staticmethod
-    def generate_child(numberOfCities, path1, path2, mutationProb):
-        n = numberOfCities
-        offSpring1 = [0]*n
-        offSpring2 = [0]*n
+    def generate_child(number_of_cities, path1, path2, mutation_prob):
+        n = number_of_cities
+        off_spring1 = [0] * n
+        off_spring2 = [0] * n
 
-        PMX.pmxCrossover(path1, path2, offSpring1, offSpring2, n)
-        PMX.mutate(offSpring1, mutationProb)
-        PMX.mutate(offSpring2, mutationProb)
+        PMX.pmx_crossover(path1, path2, off_spring1, off_spring2, n)
+        PMX.mutate(off_spring1, mutation_prob)
+        PMX.mutate(off_spring2, mutation_prob)
 
-        return offSpring1, offSpring2
+        return off_spring1, off_spring2
 
     @staticmethod
-    def pmxCrossover(parent1, parent2, offSpring1, offSpring2, n):
-        replacement1 = [-1]*(n+1)
-        replacement2 = [-1]*(n+1)
+    def pmx_crossover(parent1, parent2, off_spring1, off_spring2, n):
+        replacement1 = [-1] * (n + 1)
+        replacement2 = [-1] * (n + 1)
 
-        cuttingPoint1 = random.randint(0, n-1)
-        cuttingPoint2 = random.randint(0, n-1)
+        cutting_point1 = random.randint(0, n - 1)
+        cutting_point2 = random.randint(0, n - 1)
 
-        while cuttingPoint1 == cuttingPoint2:
-            cuttingPoint2 = random.randint(0, n-1)
-        if cuttingPoint1 > cuttingPoint2:
-            cuttingPoint1, cuttingPoint2 = cuttingPoint2, cuttingPoint1
+        while cutting_point1 == cutting_point2:
+            cutting_point2 = random.randint(0, n - 1)
+        if cutting_point1 > cutting_point2:
+            cutting_point1, cutting_point2 = cutting_point2, cutting_point1
 
-        for i in range(cuttingPoint1, cuttingPoint2+1):
-            offSpring1[i] = parent2[i]
-            offSpring2[i] = parent1[i]
+        for i in range(cutting_point1, cutting_point2 + 1):
+            off_spring1[i] = parent2[i]
+            off_spring2[i] = parent1[i]
             replacement1[parent2[i]] = parent1[i]
             replacement2[parent1[i]] = parent2[i]
 
         for i in range(n):
-            if i < cuttingPoint1 or i > cuttingPoint2:
+            if i < cutting_point1 or i > cutting_point2:
                 n1 = parent1[i]
                 m1 = replacement1[n1]
                 n2 = parent2[i]
@@ -45,16 +45,17 @@ class PMX:
                 while m2 != -1:
                     n2 = m2
                     m2 = replacement2[m2]
-                offSpring1[i] = n1
-                offSpring2[i] = n2
+                off_spring1[i] = n1
+                off_spring2[i] = n2
 
     @staticmethod
-    def mutate(offspring, mutationProbability):
+    def mutate(offspring, mutation_probability):
         n = len(offspring)
 
-        for i in range(n):
-            if random.random() < mutationProbability:
-                mutationIndex1 = random.randint(0, n-1)
-                mutationIndex2 = random.randint(0, n-1)
+        for _ in range(n):
+            if random.random() < mutation_probability:
+                mutation_index1 = random.randint(0, n - 1)
+                mutation_index2 = random.randint(0, n - 1)
 
-                offspring[mutationIndex1], offspring[mutationIndex2] = offspring[mutationIndex2], offspring[mutationIndex1]
+                offspring[mutation_index1], offspring[mutation_index2] = (offspring[mutation_index2],
+                                                                          offspring[mutation_index1])
