@@ -3,25 +3,27 @@ import time
 
 
 class ProcessToRun(multiprocessing.Process):
-    def __init__(self, conn, time_per_process, mut_prob, population_size, cities_size, matrix_receive):
+    def __init__(self, aje, conn, time_per_process, mut_prob, population_size, cities_size, matrix_receive):
         multiprocessing.Process.__init__(self)
+        self.aje = aje
         self.conn = conn
-        self.timePerProcess = time_per_process
-        self.mutationProb = mut_prob
-        self.populationSize = population_size
-        self.citiesNumber = cities_size
+        self.time_per_process = time_per_process
+        self.mutation_prob = mut_prob
+        self.population_size = population_size
+        self.cities_number = cities_size
         self.matrix = matrix_receive
 
     def run(self):
         from .TSPSolver import TSPSolver
         start_time = time.time()
-        time_to_exec = self.timePerProcess
+        time_to_exec = self.time_per_process
         for _ in range(1, 1_000_000_000 + 1):
             TSPSolver.start(
-                self.timePerProcess,
-                self.mutationProb,
-                self.populationSize,
-                self.citiesNumber,
+                self.aje,
+                self.time_per_process,
+                self.mutation_prob,
+                self.population_size,
+                self.cities_number,
                 self.matrix
             )
             if (time.time() - start_time) >= time_to_exec:

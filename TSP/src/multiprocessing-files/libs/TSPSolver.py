@@ -1,6 +1,5 @@
 import time
 
-from .AJE import AJE
 from .PMX import PMX
 
 
@@ -9,6 +8,7 @@ class TSPSolver:
     population_size = 0
     cities_number = 0
     matrix = None
+    aje = None
 
     best_distance = 0.0
     best_path = None
@@ -25,6 +25,7 @@ class TSPSolver:
         TSPSolver.best_path = None
         TSPSolver.iterations = 0
         TSPSolver.exec_time_found = 0
+        TSPSolver.aje = None
 
     class Tour:
         def __init__(self, path):
@@ -37,7 +38,7 @@ class TSPSolver:
 
     @staticmethod
     def init_population():
-        population = [TSPSolver.Tour(AJE.generate_path())
+        population = [TSPSolver.Tour(TSPSolver.aje.generate_path())
                       for _ in range(TSPSolver.population_size)]
         return population
 
@@ -61,7 +62,7 @@ class TSPSolver:
         new_population = []
         for _ in range(TSPSolver.population_size):
             path = best_path_found.copy()  # create a copy of the best path
-            AJE.shuffle_array(path)  # shuffle the path
+            TSPSolver.aje.shuffle_array(path)  # shuffle the path
             # create a new Tour with the shuffled path
             new_population.append(TSPSolver.Tour(path))
         return new_population
@@ -73,7 +74,7 @@ class TSPSolver:
     @staticmethod
     def remove_worse_paths(population):
         for tour in population:
-            tour.fitness = AJE.calc_path(tour.path)
+            tour.fitness = TSPSolver.aje.calc_path(tour.path)
         population.sort(key=lambda tour_w: tour_w.fitness)
         return population[:-2]
 
@@ -82,7 +83,8 @@ class TSPSolver:
         return population + [new_path1, new_path2]
 
     @staticmethod
-    def start(exec_time, mut_prob, population_size, cit_size, matrix_receive):
+    def start(aje, exec_time, mut_prob, population_size, cit_size, matrix_receive):
+        TSPSolver.aje = aje
         TSPSolver.mutation_prob = mut_prob
         TSPSolver.population_size = population_size
         TSPSolver.cities_number = cit_size
@@ -108,8 +110,8 @@ class TSPSolver:
             paths_pmx = PMX.generate_child(
                 TSPSolver.cities_number, final_worst_tour1.path, final_worst_tour2.path, TSPSolver.mutation_prob)
 
-            fitness_pmx1 = AJE.calc_path(paths_pmx[0])
-            fitness_pmx2 = AJE.calc_path(paths_pmx[1])
+            fitness_pmx1 = TSPSolver.aje.calc_path(paths_pmx[0])
+            fitness_pmx2 = TSPSolver.aje.calc_path(paths_pmx[1])
 
             if fitness_pmx1 < TSPSolver.get_worst_fitness(population) or fitness_pmx2 < TSPSolver.get_worst_fitness(population):
                 population = TSPSolver.remove_worse_paths(population)

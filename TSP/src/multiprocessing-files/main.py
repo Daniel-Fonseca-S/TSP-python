@@ -9,6 +9,7 @@ processesNumber = 0
 execTime = 0
 populationNumber = 0
 mutationProb = 0
+aje = AJE()
 
 
 def main():
@@ -50,7 +51,7 @@ def request_params():
 
 
 def reset_params():
-    AJE.reset_aje()
+    aje.reset_aje()
     TSPSolver.reset_tsp_solver()
 
 
@@ -66,8 +67,8 @@ def show_info_init():
 def start_program():
     start_time = time.time()
     show_info_init()
-    AJE.read_from_file(fileName)
-    AJE.start(mutationProb, populationNumber,
+    aje.read_from_file(fileName)
+    aje.start(mutationProb, populationNumber,
               execTime, processesNumber, start_time)
 
 
