@@ -4,6 +4,7 @@ import statistics
 import multiprocessing
 
 from .ProcessToRun import ProcessToRun
+from ReportGenerator import ReportGenerator
 
 
 class AJE:
@@ -16,6 +17,8 @@ class AJE:
     best_internal_distances = []
     best_paths = []
     iteration_list = []
+
+    report_service = ReportGenerator()
 
     def reset_aje(self):
         self.cities_number = 0
@@ -79,10 +82,10 @@ class AJE:
 
     def start(self, mutation_prob, population_number, exec_time, processes_number, start_time):
         print("\n--== Calculate Paths ==--")
-        for i in range(10):
+        for i in range(30):
             self.reset_previous_results()
             self.calc(i, processes_number, exec_time,
-                     mutation_prob, population_number)
+                      mutation_prob, population_number)
 
         smallest_number = min(self.best_distances)
         count = self.best_distances.count(smallest_number)
@@ -94,6 +97,9 @@ class AJE:
 
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
+        self.report_service.set_general_info("multiprocessing", self.cities_number, self.matrix, 30, processes_number,
+                                             mutation_prob, count)
+        self.report_service.generate_report()
 
     def calc(self, test_number, processes_number, exec_time, mutation_prob, population_number):
         start_time = time.time()
@@ -104,7 +110,8 @@ class AJE:
         for _ in range(processes_number):
             parent_conn, child_conn = multiprocessing.Pipe()
             process = (
-                ProcessToRun(self, child_conn, exec_time, mutation_prob, population_number, self.cities_number, self.matrix))
+                ProcessToRun(self, child_conn, exec_time, mutation_prob, population_number, self.cities_number,
+                             self.matrix))
             processes.append(process)
             parent_connections.append(parent_conn)
             process.start()
@@ -132,6 +139,8 @@ class AJE:
         formatted_time_process = f"{self.best_times[best_distance_index]:.3f}"
         print(
             f"{test_number + 1:2d}  {self.cities_number} {self.file_path_to_show}  {processes_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{iterations}\t\t{formatted_time_process}\t-{best_path}")
+        self.report_service.include_process_thread_info(best_distance, self.best_times[best_distance_index], best_path,
+                                                        0, iterations)
 
     @staticmethod
     def count_occurrences(array, target):

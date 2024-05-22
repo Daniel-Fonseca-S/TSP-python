@@ -3,6 +3,7 @@ import time
 import statistics
 
 from .ThreadToRun import ThreadToRun
+from ReportGenerator import ReportGenerator
 
 
 class AJE:
@@ -11,6 +12,8 @@ class AJE:
     file_path_to_show = ""
     best_distances = []
     best_times = []
+
+    report_service = ReportGenerator()
 
     @staticmethod
     def reset_aje():
@@ -81,6 +84,9 @@ class AJE:
 
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
+        AJE.report_service.set_general_info("multithreading", AJE.cities_number, AJE.matrix, 30, threads_number,
+                                            mutation_prob, count)
+        AJE.report_service.generate_report()
 
     @staticmethod
     def calc(test_number, threads_number, exec_time, mutation_prob, population_number):
@@ -101,7 +107,11 @@ class AJE:
         AJE.best_times.append(exec_time_total)
 
         formatted_time_thread = f"{ThreadToRun.get_formatted_time_final():.3f}"
-        print(f"{test_number + 1:2d}  {AJE.cities_number} {AJE.file_path_to_show}  {threads_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{ThreadToRun.get_iterations_final()}\t\t{formatted_time_thread}\t-{ThreadToRun.get_best_path_final()}")
+        print(
+            f"{test_number + 1:2d}  {AJE.cities_number} {AJE.file_path_to_show}  {threads_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{ThreadToRun.get_iterations_final()}\t\t{formatted_time_thread}\t-{ThreadToRun.get_best_path_final()}")
+        AJE.report_service.include_process_thread_info(best_distance, ThreadToRun.get_formatted_time_final(),
+                                                       ThreadToRun.get_best_path_final(),
+                                                       0, ThreadToRun.get_iterations_final())
 
         for thread in threads:
             if thread.is_alive():
