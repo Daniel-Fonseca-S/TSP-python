@@ -84,7 +84,7 @@ class AJE:
 
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
-        AJE.report_service.set_general_info("multithreading", AJE.cities_number, AJE.matrix, 30, threads_number,
+        AJE.report_service.set_general_info("python-multithreading", AJE.cities_number, AJE.matrix, 30, threads_number,
                                             mutation_prob, count)
         AJE.report_service.generate_report()
 

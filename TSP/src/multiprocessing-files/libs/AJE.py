@@ -97,7 +97,7 @@ class AJE:
 
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
-        self.report_service.set_general_info("multiprocessing", self.cities_number, self.matrix, 30, processes_number,
+        self.report_service.set_general_info("python-multiprocessing", self.cities_number, self.matrix, 30, processes_number,
                                              mutation_prob, count)
         self.report_service.generate_report()
 
