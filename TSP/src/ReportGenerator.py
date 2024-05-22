@@ -14,7 +14,6 @@ class ReportGenerator:
 
     def __init__(self):
         self.file_prefix = ""
-        self.file_prefix = ""
         self.cities_number = 0
         self.entry_matrix = []
         self.converged_distances = []
@@ -60,22 +59,7 @@ class ReportGenerator:
 
     # Method to reset the parameters of the report
     def reset_params(self):
-        self.file_prefix = ""
-        self.cities_number = 0
-        self.entry_matrix = []
-        self.converged_distances = []
-        self.converged_times = []
-        self.converged_paths = []
-        self.converged_fitness = []
-        self.converged_generations = []
-        self.quantity_of_executions = 0
-        self.quantity_of_threads_or_processes = 0
-        self.mutation_probability = 0.0
-        self.quantity_of_optimal_solutions = 0
-        self.file_name = ""
-        self.average_converged_time = 0.0
-        self.max_converged_time = 0.0
-        self.min_converged_time = 0.0
+        self.__init__()
 
     # Method to generate the report in the reports folder (create the folder if it does not exist)
     def generate_report(self):
