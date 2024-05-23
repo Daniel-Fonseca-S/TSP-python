@@ -97,7 +97,8 @@ class AJE:
 
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
-        self.report_service.set_general_info("python-multiprocessing", self.cities_number, self.matrix, 30, processes_number,
+        self.report_service.set_general_info("python-multiprocessing", self.cities_number, self.matrix, 30,
+                                             processes_number,
                                              mutation_prob, count)
         self.report_service.generate_report()
 
@@ -128,14 +129,17 @@ class AJE:
             self.best_paths.append(best_path)
             self.iteration_list.append(iterations)
 
+        # Process results
         exec_time_total = time.time() - start_time
         formatted_time = f"{exec_time_total:.3f}"
         best_distance = min(self.best_internal_distances)
-        best_distance_index = self.best_internal_distances.index(best_distance)
+        # índices com o valor mínimo
+        min_indices = [i for i, x in enumerate(self.best_internal_distances) if x == best_distance]
+        # índice com o menor tempo correspondente
+        best_distance_index = min(min_indices, key=lambda index: self.best_times[index])
         self.best_distances.append(best_distance)
         best_path = self.best_paths[best_distance_index]
         iterations = self.iteration_list[best_distance_index]
-
         formatted_time_process = f"{self.best_times[best_distance_index]:.3f}"
         print(
             f"{test_number + 1:2d}  {self.cities_number} {self.file_path_to_show}  {processes_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{iterations}\t\t{formatted_time_process}\t-{best_path}")

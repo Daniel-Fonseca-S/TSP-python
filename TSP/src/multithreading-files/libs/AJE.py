@@ -70,7 +70,7 @@ class AJE:
     @staticmethod
     def start(mutation_prob, population_number, exec_time, threads_number, start_time):
         print("\n--== Calculate Paths ==--")
-        for i in range(10):
+        for i in range(30):
             AJE.calc(i, threads_number, exec_time,
                      mutation_prob, population_number)
 
@@ -90,32 +90,32 @@ class AJE:
 
     @staticmethod
     def calc(test_number, threads_number, exec_time, mutation_prob, population_number):
+        ThreadToRun.results.clear()
         start_time = time.time()
         threads = [ThreadToRun(exec_time, mutation_prob, population_number,
                                AJE.cities_number, AJE.matrix) for _ in range(threads_number)]
         for thread in threads:
             thread.start()
 
-        while any(thread.is_alive() for thread in threads):
-            time.sleep(0.01)
+        for thread in threads:
+            thread.join()
+
+        # Get the best result from all threads
+        best_result = ThreadToRun.get_best_result()
 
         exec_time_total = time.time() - start_time
         formatted_time = f"{exec_time_total:.3f}"
-        best_distance = min(thread.get_best_distance_final() for thread in threads)
+        best_distance = best_result['distance']
 
         AJE.best_distances.append(best_distance)
         AJE.best_times.append(exec_time_total)
 
-        formatted_time_thread = f"{ThreadToRun.get_formatted_time_final():.3f}"
+        formatted_time_thread = f"{best_result['time']:.3f}"
         print(
-            f"{test_number + 1:2d}  {AJE.cities_number} {AJE.file_path_to_show}  {threads_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{ThreadToRun.get_iterations_final()}\t\t{formatted_time_thread}\t-{ThreadToRun.get_best_path_final()}")
-        AJE.report_service.include_process_thread_info(best_distance, ThreadToRun.get_formatted_time_final(),
-                                                       ThreadToRun.get_best_path_final(),
-                                                       0, ThreadToRun.get_iterations_final())
-
-        for thread in threads:
-            if thread.is_alive():
-                thread.join()
+            f"{test_number + 1:2d}  {AJE.cities_number} {AJE.file_path_to_show}  {threads_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{best_result['iterations']}\t\t{formatted_time_thread}\t-{best_result['path']}")
+        AJE.report_service.include_process_thread_info(best_distance, best_result['time'],
+                                                       best_result['path'],
+                                                       0, best_result['iterations'])
 
     @staticmethod
     def count_occurrences(array, target):

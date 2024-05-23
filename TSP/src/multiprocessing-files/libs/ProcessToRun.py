@@ -14,6 +14,7 @@ class ProcessToRun(multiprocessing.Process):
         self.matrix = matrix_receive
 
     def run(self):
+        print("Process started")
         from .TSPSolver import TSPSolver
         start_time = time.time()
         time_to_exec = self.time_per_process
@@ -31,3 +32,4 @@ class ProcessToRun(multiprocessing.Process):
 
         self.conn.send([TSPSolver.best_distance, TSPSolver.best_path, TSPSolver.iterations, TSPSolver.exec_time_found])
         self.conn.close()
+        print("Process finished - " + str(TSPSolver.exec_time_found) + " seconds - " + str(TSPSolver.best_distance))
