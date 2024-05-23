@@ -1,14 +1,22 @@
-# TSP - Traveling Salesman Problem Solver (Java)
-
-**SDK:** Oracle OpenJDK version **21.0.1**
-
-- Make sure to ⭐️ the repository to stay tuned! 
+# TSP - Traveling Salesman Problem Solver (Python)
 
 ## Overview 🔍
 
-This Java-based project aims to solve the **Traveling Salesman Problem (TSP)** using a parallelized approach with multithreading and the Partially Mapped Crossover (PMX) technique. The TSP is a classic optimization problem where the goal is to find the most efficient route that visits a set of cities exactly once and returns to the starting city.
+This Python-based project aims to solve the **Traveling Salesman Problem (TSP)** using a parallelized approach with the Partially Mapped Crossover (PMX) technique. The TSP is a classic optimization problem where the goal is to find the most efficient route that visits a set of cities exactly once and returns to the starting city.
+This project can be executed using multithreading or multiprocessing to explore different paths concurrently.
 
-![TSP](./assets/tsp.jpg)
+---
+
+## Fork objectives 🚀
+
+The main goal of this fork is to adapt the original project to bea able to generate reports for a performance analysis between parallel capabilities in different programming languages. The main goal is to compare the performance of the Java version with the Python version.
+
+---
+
+## How to run? 🏃
+
+To run the project, you need to have Python SDK installed on your machine. You can download it [here](https://www.python.org/downloads/).
+After that, you can run the main class ```main.py``` from multithreading or multiprocessing packages.
 
 ---
 
@@ -16,7 +24,11 @@ This Java-based project aims to solve the **Traveling Salesman Problem (TSP)** u
 
 ### 1 - Multithreading
 
-The solution utilizes multithreading to concurrently explore different paths in the solution space, improving the overall efficiency of the algorithm. This enables the program to explore multiple potential solutions simultaneously, leading to faster convergence towards an optimal or near-optimal solution.
+The solution utilizes multithreading to concurrently explore different paths in the solution space, improving the overall efficiency of the algorithm. This enables the program to explore multiple potential solutions concurrently, leading to faster convergence towards an optimal or near-optimal solution.
+
+### 2 - Multiprocessing
+
+The solution also supports multiprocessing to leverage the full computational power of the machine. By distributing the workload across multiple processes, the algorithm can explore different paths simultaneously, significantly reducing the time required to find an optimal or near-optimal solution.
 
 ### 2 - PMX Crossover
 
@@ -38,10 +50,10 @@ To control the execution time of the algorithm, a maximum time parameter is prov
 
 ## Showcase 🔭
 
-|                                         |                                            |
-|               :---:                     |                 :---:                      |
-| ![Start](./assets/showcase/1.png)       | ![Choice1](./assets/showcase/3.png)        |
-| ![Start](./assets/showcase/2.png)       | ![Choice1](./assets/showcase/4.png)        |
+|                                   |                                     |
+|:---------------------------------:|:-----------------------------------:|
+| ![Start](./assets/showcase/1.png) | ![Choice1](./assets/showcase/3.png) |
+| ![Start](./assets/showcase/2.png) | ![Choice1](./assets/showcase/4.png) |
 
 ---
 
@@ -50,88 +62,57 @@ To control the execution time of the algorithm, a maximum time parameter is prov
 ### Parameters
 
 To execute the TSP solver you need to fill the following parameters:
-|   Param   | Example |  |
-|   :---:   |  :---:  |  :---:  | 
-|  ```fileName``` | ex13.txt | Already gets from "files" folder, just put the file name |
-|  ```threadsNumber``` | 4 | |
-|  ```maxExecTime```  | 60 | in seconds |
-|  ```populationNumber``` | 100 | |
-|  ```mutationProbability``` | 0.01 | from 0.01 to 1 |
+
+|           Param           | Example  |                       Description                        |
+|:-------------------------:|:--------:|:--------------------------------------------------------:| 
+|      ```fileName```       | ex13.txt | Already gets from "files" folder, just put the file name |
+|    ```threadsNumber```    |    4     |                                                          |
+|     ```maxExecTime```     |    60    |                        in seconds                        |
+|  ```populationNumber```   |   100    |                                                          |
+| ```mutationProbability``` |   0.01   |                      from 0.01 to 1                      |
 
 Final Result:
-```Java
+```Python
 >  <fileName> <threadsNumber> <maxExecTime> <populationNumber> <mutationProbability> 
 ```
 Example
-```Java
+```Python
 >  ex13.txt 4 60 100 0.01 
 ```
 
 ### Results
-| File      |     Best distance   |
-| :---:     | :---: |
-| ex5       |    21 |
-| ex6       |    23 |
-| ex7       |   105 |
-| ex8       |   244 |
-| ex9       |  1472 |
-| ex10      |   413 |
-| sp11      |   133 |
-| uk12      |  1733 |
-| ex13      |  3158 |
-| burma14   |  3323 |
-| lau15     |   291 |
-| ulysses16 |  6859 |
-| gr17      |  2085 |
-| ulysses22 |  7013 |
-| gr24      |  1272 |
-| fri26     |   937 |
-| dantzig42 |   699 |
-| att48     | 33523 |
+|   File    | Best distance |
+|:---------:|:-------------:|
+|    ex5    |      21       |
+|    ex6    |      23       |
+|    ex7    |      105      |
+|    ex8    |      244      |
+|    ex9    |     1472      |
+|   ex10    |      413      |
+|   sp11    |      133      |
+|   uk12    |     1733      |
+|   ex13    |     3158      |
+|  burma14  |     3323      |
+|   lau15   |      291      |
+| ulysses16 |     6859      |
+|   gr17    |     2085      |
+| ulysses22 |     7013      |
+|   gr24    |     1272      |
+|   fri26   |      937      |
+| dantzig42 |      699      |
+|   att48   |     33523     |
 
 
 ---
 
-## Why to Open Source 🌐
+## Author 🤝
 
-1. **Community Collaboration**: Open sourcing your project invites a global community of developers to contribute, share ideas, and enhance its capabilities.
-
-2. **Accelerated Development**: With a collective effort, open source projects progress faster, benefiting from diverse skill sets and constant feedback.
-
-3. **Transparency and Trust**: Open source builds trust by allowing users to inspect code, ensuring security and transparency in software.
-
-4. **Cost Efficiency**: It reduces development costs as contributors volunteer their time and resources, making it an economical choice.
-
-5. **Longevity**: Open source projects tend to have longer lifespans, as they are not reliant on a single entity, ensuring sustainability.
-
----
-
-## Tech Stack ⚡
-
-![Java](https://img.shields.io/badge/Java-F89820?style=for-the-badge)
-![IntelliJ-IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000.svg?style=for-the-badge&logo=intellijidea&logoColor=white)
-
----
-
-## Installation 📥
-
-> Install TSP Repository with npm *(This will install all files, including this README.md)*
->
-> ```bash
->  npm install https://github.com/MiguelRolo/TSP.git
->  cd TSP
-> ```
-
----
-
-## Contribution 🤝
-
-> Feel free to contribute by forking the repository and creating pull requests. Bug reports and feature requests are also welcome in the Issues section.
+> The Java project was forked from Miguel Rolo's TSP project and re-written in Python by me, needing a different instantiation approach for the multiprocessing version of the algorithm.
 
 ---
 
 ## License 🪪
 
-> **(Apache License, Version 2.0)** You're **free to use** this content and codes in any project, personal or commercial. 
+> **(Apache License, Version 2.0)** You're **free to use** this content and codes in any project, personal or commercial.
 >
 > There's no need to ask permission before using theses. Giving attribution is not required, but appreciated.
