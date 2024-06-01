@@ -4,11 +4,11 @@ import time
 from libs.AJE import AJE
 from libs.TSPSolver import TSPSolver
 
-fileName = ''
-processesNumber = 0
-numberOfConvergences = 0
-populationNumber = 0
-mutationProb = 0
+file_name = ''
+processes_number = 0
+number_of_convergences = 0
+population_number = 0
+mutation_probability = 0
 aje = AJE()
 
 
@@ -36,12 +36,12 @@ def request_params():
             return "over"
 
         if len(params) == 5 and float(params[4]) <= 1:
-            global fileName, processesNumber, numberOfConvergences, populationNumber, mutationProb
-            fileName = params[0]
-            processesNumber = int(params[1])
-            numberOfConvergences = int(params[2])
-            populationNumber = int(params[3])
-            mutationProb = float(params[4])
+            global file_name, processes_number, number_of_convergences, population_number, mutation_probability
+            file_name = params[0]
+            processes_number = int(params[1])
+            number_of_convergences = int(params[2])
+            population_number = int(params[3])
+            mutation_probability = float(params[4])
 
             start_program()
 
@@ -58,19 +58,19 @@ def reset_params():
 
 def show_info_init():
     print("\n--== General Information ==--")
-    print("File: " + fileName)
-    print("Number of Processes: " + str(processesNumber))
-    print("Number of Convergences: " + str(numberOfConvergences))
-    print("Population: " + str(populationNumber))
-    print("Mutation Probability: ( " + str(mutationProb * 100) + "% )")
+    print("File: " + file_name)
+    print("Number of Processes: " + str(processes_number))
+    print("Number of Convergences: " + str(number_of_convergences))
+    print("Population: " + str(population_number))
+    print("Mutation Probability: ( " + str(mutation_probability * 100) + "% )")
 
 
 def start_program():
     start_time = time.time()
     show_info_init()
-    aje.read_from_file(fileName)
-    aje.start(mutationProb, populationNumber,
-              numberOfConvergences, processesNumber, start_time)
+    aje.read_from_file(file_name)
+    aje.start(mutation_probability, population_number,
+              number_of_convergences, processes_number, start_time)
     exit(0)
 
 

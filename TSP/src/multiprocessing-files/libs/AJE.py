@@ -58,7 +58,7 @@ class AJE:
         print("\n- Matrix -")
         for row in self.matrix:
             for value in row:
-                print(f"{value:03d} | ", end='')
+                print(f"{value:04d} | ", end='')
             print()
 
     def read_optimal_solution(self, file_name):
@@ -112,9 +112,8 @@ class AJE:
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
         print(f"Total parallel execution time: {self.report_service.calculate_total_parallel_time()} seconds")
-        self.report_service.set_general_info("python-multiprocessing", self.cities_number, self.matrix, 30,
-                                             processes_number,
-                                             mutation_prob, count)
+        self.report_service.set_general_info("python-multiprocessing", self.cities_number, self.matrix,
+                                             number_of_convergences, processes_number, mutation_prob, count)
         self.report_service.generate_report()
 
     def calc(self, test_number, processes_number, mutation_prob, population_number):

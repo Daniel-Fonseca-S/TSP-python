@@ -2,14 +2,14 @@
 
 ## Overview 🔍
 
-This Python-based project aims to solve the **Traveling Salesman Problem (TSP)** using a parallelized approach with the Partially Mapped Crossover (PMX) technique. The TSP is a classic optimization problem where the goal is to find the most efficient route that visits a set of cities exactly once and returns to the starting city.
+This Python-based project is part of an experiment to evaluate the parallel performance between Java and Python programming languages, using an algorithm that aims to solve the **Traveling Salesman Problem (TSP)** using a parallelized approach with the Partially Mapped Crossover (PMX) technique. The TSP is a classic optimization problem where the goal is to find the most efficient route that visits a set of cities exactly once and returns to the starting city.
 This project can be executed using multithreading or multiprocessing to explore different paths concurrently.
 
 ---
 
-## Fork objectives 🚀
+## Project details 🚀
 
-The main goal of this fork is to adapt the original project to bea able to generate reports for a performance analysis between parallel capabilities in different programming languages. The main goal is to compare the performance of the Java version with the Python version.
+This project was based of TSP-Java from Miguel Rôlo. The main goal is to adapt the original project to be able to generate reports for a performance analysis between parallel capabilities in different programming languages. Comparing the performance of the Java version with the Python version.
 
 ---
 
@@ -22,29 +22,33 @@ After that, you can run the main class ```main.py``` from multithreading or mult
 
 ## Features ✅
 
-### 1 - Multithreading
+### 1 - Multiprocessing
 
-The solution utilizes multithreading to concurrently explore different paths in the solution space, improving the overall efficiency of the algorithm. This enables the program to explore multiple potential solutions concurrently, leading to faster convergence towards an optimal or near-optimal solution.
+The program supports multiprocessing to leverage the computational resources of multiple cores or processors. By distributing the workload across multiple processes, the algorithm can explore different paths parallelly, leading to faster convergence towards the optimal solution. This feature enhances the scalability and performance of the algorithm on multi-core systems.
 
-### 2 - Multiprocessing
+### 2 - Multithreading
 
-The solution also supports multiprocessing to leverage the full computational power of the machine. By distributing the workload across multiple processes, the algorithm can explore different paths simultaneously, significantly reducing the time required to find an optimal or near-optimal solution.
+The program supports multithreading to utilize the concurrent execution capabilities of modern processors. By running multiple threads simultaneously, the algorithm can explore different paths concurrently, speeding up the search for the optimal solution. This feature improves the efficiency of the algorithm by taking advantage of the parallel processing capabilities of the system.
 
-### 2 - PMX Crossover
+### 3 - PMX Crossover
 
 The genetic algorithm incorporates the PMX crossover technique to create diverse offspring. PMX ensures that the child solutions inherit parts of their parents' paths, preserving the integrity of the route while introducing variability. This enhances the algorithm's ability to explore and converge towards optimal solutions.
 
-### 3 - Mutation Probability
+### 4 - Mutation Probability
 
 The genetic algorithm incorporates a mutation mechanism with adjustable probability. Mutation introduces diversity in the population by randomly altering some solutions, preventing premature convergence to suboptimal solutions. Users can fine-tune the mutation probability to strike a balance between exploration and exploitation.
 
-### 4 - Population
+### 5 - Population
 
 The genetic algorithm maintains a population of potential solutions, evolving them over generations. A diverse population helps the algorithm explore a broader solution space. Users can configure the size of the population based on the characteristics of the TSP instance, allowing for flexibility in handling different problem complexities.
 
-### 5 - Max Time of Execution
+### 6 - Convergence Analysis
 
-To control the execution time of the algorithm, a maximum time parameter is provided. This ensures that the algorithm terminates gracefully even if an optimal solution is not found within a specified timeframe. Users can set this parameter to meet specific time constraints, making the solution adaptable to different scenarios.
+The program performs multiple runs to evaluate the convergence behavior of the algorithm. By executing the algorithm multiple times, users can observe the consistency of the results and analyze the convergence trends. This feature provides insights into the algorithm's performance and robustness across different runs.
+
+### 7 - Report Generation
+
+The program generates detailed reports summarizing the results of the TSP solver. These reports include information about the best solution found, the convergence behavior, and the execution time. Users can analyze these reports to assess the algorithm's performance and compare different configurations or problem instances.
 
 ---
 
@@ -66,19 +70,21 @@ To execute the TSP solver you need to fill the following parameters:
 |           Param           | Example  |                       Description                        |
 |:-------------------------:|:--------:|:--------------------------------------------------------:| 
 |      ```fileName```       | ex13.txt | Already gets from "files" folder, just put the file name |
-|    ```threadsNumber```    |    4     |                                                          |
-|     ```maxExecTime```     |    60    |                        in seconds                        |
-|  ```populationNumber```   |   100    |                                                          |
+|    ```threadsNumber```    |    4     |         Number of Threads to execute the program         |
+| ```numberOfExecutions```  |    30    |                  Number of convergences                  |
+|  ```populationNumber```   |   100    |                     Population size                      |
 | ```mutationProbability``` |   0.01   |                      from 0.01 to 1                      |
 
 Final Result:
-```Python
->  <fileName> <threadsNumber> <maxExecTime> <populationNumber> <mutationProbability> 
+```Java
+>  <fileName> <threadsNumber> <numberOfExecutions> <populationNumber> <mutationProbability>
 ```
 Example
-```Python
->  ex13.txt 4 60 100 0.01 
+```Java
+>  ex13.txt 4 30 100 0.01 
 ```
+
+---
 
 ### Results
 |   File    | Best distance |
@@ -102,12 +108,10 @@ Example
 | dantzig42 |      699      |
 |   att48   |     33523     |
 
-
 ---
 
-## Author 🤝
-
-> The Java project was forked from Miguel Rolo's TSP project and re-written in Python by me, needing a different instantiation approach for the multiprocessing version of the algorithm.
+### Reports
+The reports are generated in the ```reports``` folder, as a ```.txt```  and ```.json``` files.
 
 ---
 

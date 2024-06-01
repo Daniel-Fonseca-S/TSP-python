@@ -10,6 +10,8 @@ class AJE:
     cities_number = 0
     matrix = []
     file_path_to_show = ""
+    true_optimal_solution = 0.0
+
     best_distances = []
     best_times = []
 
@@ -34,6 +36,7 @@ class AJE:
                 AJE.show_info_from_file()
         except IOError as error:
             print(f"\nError reading the file: {error}")
+        AJE.read_optimal_solution(file_name)
 
     @staticmethod
     def show_info_from_file():
@@ -42,8 +45,21 @@ class AJE:
         print("\n- Matrix -")
         for row in AJE.matrix:
             for value in row:
-                print(f"{value:02d} | ", end='')
+                print(f"{value:04d} | ", end='')
             print()
+
+    @staticmethod
+    def read_optimal_solution(file_name):
+        try:
+            with open("TSP/files/results.txt", 'r') as file:
+                lines = file.readlines()
+                for line in lines:
+                    if line.startswith(file_name):
+                        AJE.true_optimal_solution = float(line.split()[1])
+                        break
+        except IOError as error:
+            print(f"\nError reading the file: {error}")
+            exit(1)
 
     @staticmethod
     def generate_path():
@@ -68,11 +84,10 @@ class AJE:
         return value_of_path
 
     @staticmethod
-    def start(mutation_prob, population_number, exec_time, threads_number, start_time):
+    def start(mutation_prob, population_number, number_of_convergences, threads_number, start_time):
         print("\n--== Calculate Paths ==--")
-        for i in range(30):
-            AJE.calc(i, threads_number, exec_time,
-                     mutation_prob, population_number)
+        for i in range(number_of_convergences):
+            AJE.calc(i, threads_number, mutation_prob, population_number)
 
         smallest_number = min(AJE.best_distances)
         count = AJE.best_distances.count(smallest_number)
@@ -84,23 +99,23 @@ class AJE:
 
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
-        AJE.report_service.set_general_info("python-multithreading", AJE.cities_number, AJE.matrix, 30, threads_number,
-                                            mutation_prob, count)
+        print(f"Total concurrent execution time: {AJE.report_service.calculate_total_parallel_time()} seconds")
+        AJE.report_service.set_general_info("python-multithreading", AJE.cities_number, AJE.matrix,
+                                            number_of_convergences, threads_number, mutation_prob, count)
         AJE.report_service.generate_report()
 
     @staticmethod
-    def calc(test_number, threads_number, exec_time, mutation_prob, population_number):
+    def calc(test_number, threads_number, mutation_prob, population_number):
         ThreadToRun.results.clear()
         start_time = time.time()
-        threads = [ThreadToRun(exec_time, mutation_prob, population_number,
-                               AJE.cities_number, AJE.matrix) for _ in range(threads_number)]
+        threads = [ThreadToRun(mutation_prob, population_number, AJE.cities_number, AJE.matrix,
+                               AJE.true_optimal_solution) for _ in range(threads_number)]
         for thread in threads:
             thread.start()
 
         for thread in threads:
             thread.join()
 
-        # Get the best result from all threads
         best_result = ThreadToRun.get_best_result()
 
         exec_time_total = time.time() - start_time
@@ -113,9 +128,8 @@ class AJE:
         formatted_time_thread = f"{best_result['time']:.3f}"
         print(
             f"{test_number + 1:2d}  {AJE.cities_number} {AJE.file_path_to_show}  {threads_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{best_result['iterations']}\t\t{formatted_time_thread}\t-{best_result['path']}")
-        AJE.report_service.include_process_thread_info(best_distance, best_result['time'],
-                                                       best_result['path'],
-                                                       0, best_result['iterations'])
+        AJE.report_service.add_converged_info(best_distance, best_result['time'], best_result['path'],
+                                              0, best_result['iterations'])
 
     @staticmethod
     def count_occurrences(array, target):

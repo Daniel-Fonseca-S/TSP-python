@@ -4,17 +4,18 @@ import time
 from libs.AJE import AJE
 from libs.TSPSolver import TSPSolver
 
-fileName = ''
-threadsNumber = 0
-execTime = 0
-populationNumber = 0
-mutationProb = 0
+file_name = ''
+threads_number = 0
+number_of_convergences = 0
+population_number = 0
+mutation_probability = 0
 
 
 def main():
     try:
         while True:
-            if request_params() == "over":
+            status = request_params()
+            if status == "over" or status == "start":
                 break
     except Exception as e:
         sys.stderr.write("Error: " + str(e))
@@ -34,18 +35,18 @@ def request_params():
             return "over"
 
         if len(params) == 5 and float(params[4]) <= 1:
-            global fileName, threadsNumber, execTime, populationNumber, mutationProb
-            fileName = params[0]
-            threadsNumber = int(params[1])
-            execTime = int(params[2])
-            populationNumber = int(params[3])
-            mutationProb = float(params[4])
+            global file_name, threads_number, number_of_convergences, population_number, mutation_probability
+            file_name = params[0]
+            threads_number = int(params[1])
+            number_of_convergences = int(params[2])
+            population_number = int(params[3])
+            mutation_probability = float(params[4])
 
             start_program()
 
             return "start"
     else:
-        print("> <fileName> <threadsNumber> <execTime> <populationNumber> <mutationProb> (max: 1 (100%))")
+        print("> <fileName> <threadsNumber> <numberOfConvergences> <populationNumber> <mutationProb> (max: 1 (100%))")
         return "repeat"
 
 
@@ -56,19 +57,20 @@ def reset_params():
 
 def show_info_init():
     print("\n--== General Information ==--")
-    print("File: " + fileName)
-    print("Number of Threads: " + str(threadsNumber))
-    print("(MAX) Execution Time: " + str(execTime) + " second(s)")
-    print("Population: " + str(populationNumber))
-    print("Mutation Probability: ( " + str(mutationProb * 100) + "% )")
+    print("File: " + file_name)
+    print("Number of Threads: " + str(threads_number))
+    print("Number of Convergences: " + str(number_of_convergences))
+    print("Population: " + str(population_number))
+    print("Mutation Probability: ( " + str(mutation_probability * 100) + "% )")
 
 
 def start_program():
     start_time = time.time()
     show_info_init()
-    AJE.read_from_file(fileName)
-    AJE.start(mutationProb, populationNumber,
-              execTime, threadsNumber, start_time)
+    AJE.read_from_file(file_name)
+    AJE.start(mutation_probability, population_number,
+              number_of_convergences, threads_number, start_time)
+    exit(0)
 
 
 if __name__ == "__main__":

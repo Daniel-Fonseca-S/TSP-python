@@ -15,38 +15,42 @@ class ThreadToRun(threading.Thread):
     # Shared list to store results from all threads
     results = []
 
-    def __init__(self, time_per_thread, mut_prob, population_size, cities_size, matrix_receive):
+    def __init__(self, mut_prob, population_size, cities_size, matrix_receive, true_optimal_solution):
         threading.Thread.__init__(self)
-        self.timePerThread = time_per_thread
         ThreadToRun.mutationProb = mut_prob
         ThreadToRun.populationSize = population_size
         ThreadToRun.citiesNumber = cities_size
         ThreadToRun.matrix = matrix_receive
+        self.true_optimal_solution = true_optimal_solution
 
     def run(self):
         print("thread started")
         from .TSPSolver import TSPSolver
         start_time = time.time()
-        time_to_exec = self.timePerThread
         for _ in range(1, 1_000_000_000 + 1):
             TSPSolver.start(
-                self.timePerThread,
+                self.true_optimal_solution,
                 ThreadToRun.mutationProb,
                 ThreadToRun.populationSize,
                 ThreadToRun.citiesNumber,
                 ThreadToRun.matrix
             )
-            if (time.time() - start_time) >= time_to_exec:
+            if TSPSolver.best_distance <= self.true_optimal_solution:
                 break
 
-        # Store results in the shared list
+            if TSPSolver.exec_time_found >= 300:
+                print("Thread timed out")
+                break
+        total_time = time.time() - start_time
+
         ThreadToRun.results.append({
             'distance': TSPSolver.best_distance,
             'path': TSPSolver.best_path,
             'iterations': TSPSolver.iterations,
-            'time': TSPSolver.exec_time_found
+            'time': total_time
         })
-        print("thread finished - " + str(TSPSolver.exec_time_found) + " seconds - " + str(TSPSolver.best_distance))
+        print(f"Thread finished with distance: {TSPSolver.best_distance} and time: {total_time} seconds and "
+              f"{TSPSolver.iterations} iterations")
 
     @staticmethod
     def get_best_result():
