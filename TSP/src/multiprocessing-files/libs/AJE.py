@@ -11,6 +11,8 @@ class AJE:
     cities_number = 0
     matrix = []
     file_path_to_show = ""
+    true_optimal_solution = 0.0
+
     best_distances = []
     best_times = []
 
@@ -48,6 +50,7 @@ class AJE:
         except IOError as error:
             print(f"\nError reading the file: {error}")
             exit(1)
+        self.read_optimal_solution(file_name)
 
     def show_info_from_file(self):
         print("\n--== Information of the City ==--")
@@ -55,8 +58,20 @@ class AJE:
         print("\n- Matrix -")
         for row in self.matrix:
             for value in row:
-                print(f"{value:02d} | ", end='')
+                print(f"{value:03d} | ", end='')
             print()
+
+    def read_optimal_solution(self, file_name):
+        try:
+            with open("TSP/files/results.txt", 'r') as file:
+                lines = file.readlines()
+                for line in lines:
+                    if line.startswith(file_name):
+                        self.true_optimal_solution = float(line.split()[1])
+                        break
+        except IOError as error:
+            print(f"\nError reading the file: {error}")
+            exit(1)
 
     def generate_path(self):
         if self.cities_number == 0:
@@ -80,12 +95,11 @@ class AJE:
                 value_of_path += self.matrix[path[i]][path[i + 1]]
         return value_of_path
 
-    def start(self, mutation_prob, population_number, exec_time, processes_number, start_time):
+    def start(self, mutation_prob, population_number, number_of_convergences, processes_number, start_time):
         print("\n--== Calculate Paths ==--")
-        for i in range(30):
+        for i in range(number_of_convergences):
             self.reset_previous_results()
-            self.calc(i, processes_number, exec_time,
-                      mutation_prob, population_number)
+            self.calc(i, processes_number, mutation_prob, population_number)
 
         smallest_number = min(self.best_distances)
         count = self.best_distances.count(smallest_number)
@@ -97,22 +111,22 @@ class AJE:
 
         formatted_time_exec = f"{(time.time() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
+        print(f"Total parallel execution time: {self.report_service.calculate_total_parallel_time()} seconds")
         self.report_service.set_general_info("python-multiprocessing", self.cities_number, self.matrix, 30,
                                              processes_number,
                                              mutation_prob, count)
         self.report_service.generate_report()
 
-    def calc(self, test_number, processes_number, exec_time, mutation_prob, population_number):
+    def calc(self, test_number, processes_number, mutation_prob, population_number):
         start_time = time.time()
         processes = []
         parent_connections = []
 
-        # Create processes and their connections
         for _ in range(processes_number):
             parent_conn, child_conn = multiprocessing.Pipe()
             process = (
-                ProcessToRun(self, child_conn, exec_time, mutation_prob, population_number, self.cities_number,
-                             self.matrix))
+                ProcessToRun(self, child_conn, mutation_prob, population_number, self.cities_number,
+                             self.matrix, self.true_optimal_solution))
             processes.append(process)
             parent_connections.append(parent_conn)
             process.start()
@@ -143,8 +157,8 @@ class AJE:
         formatted_time_process = f"{self.best_times[best_distance_index]:.3f}"
         print(
             f"{test_number + 1:2d}  {self.cities_number} {self.file_path_to_show}  {processes_number}\t\t{formatted_time}\t\t{int(best_distance)}\t\t\t{iterations}\t\t{formatted_time_process}\t-{best_path}")
-        self.report_service.include_process_thread_info(best_distance, self.best_times[best_distance_index], best_path,
-                                                        0, iterations)
+        self.report_service.add_converged_info(best_distance, self.best_times[best_distance_index], best_path,
+                                               0, iterations)
 
     @staticmethod
     def count_occurrences(array, target):

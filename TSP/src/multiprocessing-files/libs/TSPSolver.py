@@ -83,7 +83,7 @@ class TSPSolver:
         return population + [new_path1, new_path2]
 
     @staticmethod
-    def start(aje, exec_time, mut_prob, population_size, cit_size, matrix_receive):
+    def start(aje, true_optimal_solution, mut_prob, population_size, cit_size, matrix_receive):
         TSPSolver.aje = aje
         TSPSolver.mutation_prob = mut_prob
         TSPSolver.population_size = population_size
@@ -97,7 +97,6 @@ class TSPSolver:
         population = TSPSolver.init_population()
         start_time = time.time()
         iterations_total = 0
-        time_to_exec = exec_time
         exec_time_found = 0
         for i in range(1, 1_000_000_000):
             if (i - 1) == TSPSolver.population_size:
@@ -127,7 +126,11 @@ class TSPSolver:
                     exec_time_found = time.time() - start_time
                     iterations_total += 1
 
-            if (time.time() - start_time) >= time_to_exec:
+            if best_distance_found <= true_optimal_solution:
+                break
+
+            if exec_time_found >= 300:
+                print("TSP solver timed out")
                 break
 
         TSPSolver.iterations = iterations_total
