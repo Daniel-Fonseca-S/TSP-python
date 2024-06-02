@@ -16,7 +16,7 @@ class ProcessToRun(multiprocessing.Process):
     def run(self):
         print("Process started")
         from .TSPSolver import TSPSolver
-        start_time = time.time()
+        start_time = time.perf_counter()
         for _ in range(1, 1_000_000_000 + 1):
             TSPSolver.start(
                 self.aje,
@@ -32,7 +32,7 @@ class ProcessToRun(multiprocessing.Process):
             if TSPSolver.exec_time_found >= 300:
                 print("Process timed out")
                 break
-        total_time = time.time() - start_time
+        total_time = time.perf_counter() - start_time
 
         self.conn.send([TSPSolver.best_distance, TSPSolver.best_path, TSPSolver.iterations, total_time])
         self.conn.close()

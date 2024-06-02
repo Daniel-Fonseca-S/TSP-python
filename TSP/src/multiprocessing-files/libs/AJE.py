@@ -117,7 +117,7 @@ class AJE:
         self.report_service.generate_report()
 
     def calc(self, test_number, processes_number, mutation_prob, population_number):
-        start_time = time.time()
+        start_time = time.perf_counter()
         processes = []
         parent_connections = []
 
@@ -143,7 +143,7 @@ class AJE:
             self.iteration_list.append(iterations)
 
         # Process results
-        exec_time_total = time.time() - start_time
+        exec_time_total = time.perf_counter() - start_time
         formatted_time = f"{exec_time_total:.3f}"
         best_distance = min(self.best_internal_distances)
         # índices com o valor mínimo

@@ -89,15 +89,15 @@ class ReportGenerator:
 
     def generate_report_content(self):
         report_content = "\n".join([
-            "Detailed Report of the TSP Algorithm using" + self.filePrefix,
+            "Detailed Report of the TSP Algorithm using " + self.filePrefix + ":\n",
             "Number of Cities: " + str(self.citiesNumber),
             "Quantity of Threads/Processes: " + str(self.threadsOrProcesses),
             "Mutation Probability: " + str(self.mutationProb),
             "Quantity of Executions: " + str(self.executions),
             "Entry Matrix:",
             "\n".join([" | ".join(map(str, row)) for row in self.entryMatrix]),
-            "TSP Results by Convergence:",
-            "\n".join([
+            "\nTSP Results by Convergence:\n",
+            "\n\n".join([
                 "\n".join([
                     "Convergence " + str(i + 1),
                     "Distance: " + str(self.convergedDistances[i]),
@@ -107,12 +107,12 @@ class ReportGenerator:
                     "Generations: " + str(self.convergedGenerations[i])
                 ]) for i in range(len(self.convergedDistances))
             ]),
-            "Quantity of Optimal Solutions: " + str(self.optimalSolutions),
+            "\nQuantity of Optimal Solutions: " + str(self.optimalSolutions),
             "Average Converged Time: " + str(self.averageConvergedTime),
             "Max Converged Time: " + str(self.maxConvergedTime),
             "Min Converged Time: " + str(self.minConvergedTime),
             "Total Time of Threads/Processes: " + str(self.calculate_total_parallel_time()),
-            "End of Report"
+            "\nEnd of Report"
         ])
         print("\nReport generated in the reports folder with the name: " + self.fileName)
         return report_content

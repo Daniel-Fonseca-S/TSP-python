@@ -26,7 +26,7 @@ class ThreadToRun(threading.Thread):
     def run(self):
         print("thread started")
         from .TSPSolver import TSPSolver
-        start_time = time.time()
+        start_time = time.perf_counter()
         for _ in range(1, 1_000_000_000 + 1):
             TSPSolver.start(
                 self.true_optimal_solution,
@@ -41,7 +41,7 @@ class ThreadToRun(threading.Thread):
             if TSPSolver.exec_time_found >= 300:
                 print("Thread timed out")
                 break
-        total_time = time.time() - start_time
+        total_time = time.perf_counter() - start_time
 
         ThreadToRun.results.append({
             'distance': TSPSolver.best_distance,

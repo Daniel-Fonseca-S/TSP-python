@@ -66,7 +66,7 @@ def show_info_init():
 
 
 def start_program():
-    start_time = time.time()
+    start_time = time.perf_counter()
     show_info_init()
     aje.read_from_file(file_name)
     aje.start(mutation_probability, population_number,

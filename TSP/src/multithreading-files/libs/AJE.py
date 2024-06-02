@@ -107,7 +107,7 @@ class AJE:
     @staticmethod
     def calc(test_number, threads_number, mutation_prob, population_number):
         ThreadToRun.results.clear()
-        start_time = time.time()
+        start_time = time.perf_counter()
         threads = [ThreadToRun(mutation_prob, population_number, AJE.cities_number, AJE.matrix,
                                AJE.true_optimal_solution) for _ in range(threads_number)]
         for thread in threads:
@@ -118,7 +118,7 @@ class AJE:
 
         best_result = ThreadToRun.get_best_result()
 
-        exec_time_total = time.time() - start_time
+        exec_time_total = time.perf_counter() - start_time
         formatted_time = f"{exec_time_total:.3f}"
         best_distance = best_result['distance']
 

@@ -92,7 +92,7 @@ class TSPSolver:
         best_path_found = [0] * TSPSolver.cities_number
 
         population = TSPSolver.init_population()
-        start_time = time.time()
+        start_time = time.perf_counter()
         iterations_total = 0
         exec_time_found = 0
         for i in range(1, 1_000_000_000):
@@ -121,7 +121,7 @@ class TSPSolver:
                     best_path_found = tour.path
                     population = TSPSolver.change_population_to_best(
                         best_path_found)
-                    exec_time_found = time.time() - start_time
+                    exec_time_found = time.perf_counter() - start_time
                     iterations_total += 1
 
             if best_distance_found <= true_optimal_solution:
