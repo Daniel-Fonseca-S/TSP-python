@@ -127,7 +127,7 @@ class TSPSolver:
             if best_distance_found <= true_optimal_solution:
                 break
 
-            if exec_time_found >= 300:
+            if time.perf_counter() - start_time >= 900:
                 print("TSP solver timed out")
                 break
 

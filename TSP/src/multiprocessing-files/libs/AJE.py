@@ -109,7 +109,7 @@ class AJE:
 
         print(f"Optimal found {count} times \t Average = {average} \t Std Dev = {std_dev_formatted}")
 
-        formatted_time_exec = f"{(time.time() - start_time):.3f}"
+        formatted_time_exec = f"{(time.perf_counter() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
         print(f"Total parallel execution time: {self.report_service.calculate_total_parallel_time()} seconds")
         self.report_service.set_general_info("python-multiprocessing", self.cities_number, self.matrix,
@@ -121,11 +121,13 @@ class AJE:
         processes = []
         parent_connections = []
 
+        solution_already_found = multiprocessing.Value('b', False)
+
         for _ in range(processes_number):
             parent_conn, child_conn = multiprocessing.Pipe()
             process = (
                 ProcessToRun(self, child_conn, mutation_prob, population_number, self.cities_number,
-                             self.matrix, self.true_optimal_solution))
+                             self.matrix, self.true_optimal_solution, solution_already_found))
             processes.append(process)
             parent_connections.append(parent_conn)
             process.start()
@@ -137,6 +139,8 @@ class AJE:
         # Collect results from processes
         for parent_conn in parent_connections:
             best_distance, best_path, iterations, exec_time_found = parent_conn.recv()
+            if best_distance is None:
+                continue
             self.best_internal_distances.append(best_distance)
             self.best_times.append(exec_time_found)
             self.best_paths.append(best_path)

@@ -97,7 +97,7 @@ class AJE:
 
         print(f"Optimal found {count} times \t Average = {average} \t Std Dev = {std_dev_formatted}")
 
-        formatted_time_exec = f"{(time.time() - start_time):.3f}"
+        formatted_time_exec = f"{(time.perf_counter() - start_time):.3f}"
         print(f"\nProgram ran in {formatted_time_exec} seconds")
         print(f"Total concurrent execution time: {AJE.report_service.calculate_total_parallel_time()} seconds")
         AJE.report_service.set_general_info("python-multithreading", AJE.cities_number, AJE.matrix,
